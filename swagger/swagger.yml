@@ -1,0 +1,73 @@
+swagger: "2.0"
+info:
+  title: beego Test API
+  description: beego has a very cool tools to autogenerate documents for your API
+  version: 1.0.0
+  termsOfService: http://beego.me/
+  contact:
+    email: astaxie@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+basePath: /v1
+paths:
+  /user/:
+    post:
+      tags:
+      - user
+      description: 用户登录
+      operationId: UserController.用户登录
+      parameters:
+      - in: formData
+        name: email
+        description: 邮箱
+        required: true
+        type: string
+        default: ant
+      - in: formData
+        name: password
+        description: 密码
+        required: true
+        type: string
+        default: "123"
+      responses:
+        "200":
+          description: 登录成功
+        "1101":
+          description: 参数错误
+        "1102":
+          description: 请求出错
+        "1104":
+          description: 用户名不存在
+        "1105":
+          description: 用户名或者密码错误
+definitions:
+  models.Demos:
+    title: Demos
+    type: object
+    properties:
+      Demosname:
+        type: string
+      Id:
+        type: string
+      Password:
+        type: string
+      Profile:
+        $ref: '#/definitions/models.Profile'
+  models.Profile:
+    title: Profile
+    type: object
+    properties:
+      Address:
+        type: string
+      Age:
+        type: integer
+        format: int64
+      Email:
+        type: string
+      Gender:
+        type: string
+tags:
+- name: user
+  description: |
+    Operations about Users
