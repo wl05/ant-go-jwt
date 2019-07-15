@@ -9,11 +9,16 @@ func init() {
 }
 
 type User struct {
-	Id       int
-	Username string
-	Password string
-	Salt     string `orm:"null"`
-	Email    string
+	Id       int    `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Salt     string `orm:"null" json:"salt"`
+	Email    string `json:"email"`
+}
+type GetUsersStruct struct {
+	Id       int    `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 // 自定义表名
@@ -28,10 +33,10 @@ func Register(u User) error {
 	return err
 }
 
-func GetUsers() (user []User, err error) {
-	var users []User
+func GetUsers() (user []GetUsersStruct, err error) {
+	var users []GetUsersStruct
 	o := orm.NewOrm()
-	_, _err := o.QueryTable("user").All(&users, "Id", "Username")
+	_, _err := o.Raw("select id,username,email from user").QueryRows(&users)
 	return users, _err
 }
 
@@ -47,7 +52,7 @@ func GetUserByUsername(username string) (user User, err error) {
 	var _user User
 	o := orm.NewOrm()
 	o.Using("default")
-	act := o.Raw("SELECT * FROM user WHERE username = ?", username)
+	act := o.Raw("select * from user where username = ?", username)
 	_err := act.QueryRow(&_user)
 	return _user, _err
 }
@@ -56,7 +61,7 @@ func GetUserByEmail(email string) (user User, err error) {
 	var _user User
 	o := orm.NewOrm()
 	o.Using("default")
-	act := o.Raw("SELECT * FROM user WHERE email = ?", email)
+	act := o.Raw("select * from user where email = ?", email)
 	_err := act.QueryRow(&_user)
 	return _user, _err
 }
@@ -64,7 +69,7 @@ func UpdateTagByUserId(id int, username string, password string) (num int64, err
 	DB := orm.NewOrm()
 	var act orm.RawSeter
 	DB.Using("default")
-	act = DB.Raw("UPDATE user SET username = ?,password = ? where id = ?", username, password, id)
+	act = DB.Raw("update user set username = ?,password = ? where id = ?", username, password, id)
 	res, _err := act.Exec()
 	_num, _ := res.RowsAffected()
 	return _num, _err

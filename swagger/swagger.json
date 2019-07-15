@@ -15,13 +15,57 @@
     },
     "basePath": "/v1",
     "paths": {
-        "/user/": {
+        "/login/login": {
             "post": {
                 "tags": [
-                    "user"
+                    "login"
+                ],
+                "description": "用户登录",
+                "operationId": "LoginController.用户登录",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "邮箱",
+                        "required": true,
+                        "type": "string",
+                        "default": "demo@qq.com"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": true,
+                        "type": "string",
+                        "default": "123"
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "参数错误"
+                    },
+                    "1001": {
+                        "description": "请求出错"
+                    },
+                    "200": {
+                        "description": "登录成功"
+                    },
+                    "2001": {
+                        "description": "用户不存在"
+                    },
+                    "2002": {
+                        "description": "用户名或者密码错误"
+                    }
+                }
+            }
+        },
+        "/signup/": {
+            "post": {
+                "tags": [
+                    "signup"
                 ],
                 "description": "Register",
-                "operationId": "UserController.Register",
+                "operationId": "RegisterController.Register",
                 "parameters": [
                     {
                         "in": "formData",
@@ -64,86 +108,19 @@
                 }
             }
         },
-        "/user/login": {
-            "post": {
+        "/user/": {
+            "get": {
                 "tags": [
                     "user"
                 ],
-                "description": "用户登录",
-                "operationId": "UserController.用户登录",
-                "parameters": [
-                    {
-                        "in": "formData",
-                        "name": "email",
-                        "description": "邮箱",
-                        "required": true,
-                        "type": "string",
-                        "default": "demo@qq.com"
-                    },
-                    {
-                        "in": "formData",
-                        "name": "password",
-                        "description": "密码",
-                        "required": true,
-                        "type": "string",
-                        "default": "123"
-                    }
-                ],
+                "description": "获取用户列表的",
                 "responses": {
-                    "1000": {
-                        "description": "参数错误"
-                    },
-                    "1001": {
+                    "1102": {
                         "description": "请求出错"
                     },
                     "200": {
-                        "description": "登录成功"
-                    },
-                    "2001": {
-                        "description": "用户不存在"
-                    },
-                    "2002": {
-                        "description": "用户名或者密码错误"
+                        "description": "请求成功"
                     }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "models.Demos": {
-            "title": "Demos",
-            "type": "object",
-            "properties": {
-                "Demosname": {
-                    "type": "string"
-                },
-                "Id": {
-                    "type": "string"
-                },
-                "Password": {
-                    "type": "string"
-                },
-                "Profile": {
-                    "$ref": "#/definitions/models.Profile"
-                }
-            }
-        },
-        "models.Profile": {
-            "title": "Profile",
-            "type": "object",
-            "properties": {
-                "Address": {
-                    "type": "string"
-                },
-                "Age": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "Email": {
-                    "type": "string"
-                },
-                "Gender": {
-                    "type": "string"
                 }
             }
         }
@@ -152,6 +129,14 @@
         {
             "name": "user",
             "description": "Operations about Users\n"
+        },
+        {
+            "name": "login",
+            "description": "Operations about Login\n"
+        },
+        {
+            "name": "signup",
+            "description": "Operations about Register\n"
         }
     ]
 }

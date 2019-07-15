@@ -11,12 +11,42 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /v1
 paths:
-  /user/:
+  /login/login:
     post:
       tags:
-      - user
+      - login
+      description: 用户登录
+      operationId: LoginController.用户登录
+      parameters:
+      - in: formData
+        name: email
+        description: 邮箱
+        required: true
+        type: string
+        default: demo@qq.com
+      - in: formData
+        name: password
+        description: 密码
+        required: true
+        type: string
+        default: "123"
+      responses:
+        "200":
+          description: 登录成功
+        "1000":
+          description: 参数错误
+        "1001":
+          description: 请求出错
+        "2001":
+          description: 用户不存在
+        "2002":
+          description: 用户名或者密码错误
+  /signup/:
+    post:
+      tags:
+      - signup
       description: Register
-      operationId: UserController.Register
+      operationId: RegisterController.Register
       parameters:
       - in: formData
         name: username
@@ -45,63 +75,23 @@ paths:
           description: 用户名已存在
         "2005":
           description: 邮箱已存在
-  /user/login:
-    post:
+  /user/:
+    get:
       tags:
       - user
-      description: 用户登录
-      operationId: UserController.用户登录
-      parameters:
-      - in: formData
-        name: email
-        description: 邮箱
-        required: true
-        type: string
-        default: demo@qq.com
-      - in: formData
-        name: password
-        description: 密码
-        required: true
-        type: string
-        default: "123"
+      description: 获取用户列表的
       responses:
         "200":
-          description: 登录成功
-        "1000":
-          description: 参数错误
-        "1001":
+          description: 请求成功
+        "1102":
           description: 请求出错
-        "2001":
-          description: 用户不存在
-        "2002":
-          description: 用户名或者密码错误
-definitions:
-  models.Demos:
-    title: Demos
-    type: object
-    properties:
-      Demosname:
-        type: string
-      Id:
-        type: string
-      Password:
-        type: string
-      Profile:
-        $ref: '#/definitions/models.Profile'
-  models.Profile:
-    title: Profile
-    type: object
-    properties:
-      Address:
-        type: string
-      Age:
-        type: integer
-        format: int64
-      Email:
-        type: string
-      Gender:
-        type: string
 tags:
 - name: user
   description: |
     Operations about Users
+- name: login
+  description: |
+    Operations about Login
+- name: signup
+  description: |
+    Operations about Register

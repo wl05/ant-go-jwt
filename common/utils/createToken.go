@@ -28,7 +28,6 @@ func CreateToken(email string) (tokenString string, err error) {
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
-
 	// Declare the token with the algorithm used for signing, and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Create the JWT string
