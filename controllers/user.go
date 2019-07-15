@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"ant-go-jwt/common/consts"
-	"ant-go-jwt/common/utils"
 	"ant-go-jwt/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"golang.org/x/crypto/bcrypt"
 	"strings"
 )
 
@@ -60,11 +60,12 @@ func (this *UserController) Register() {
 		return
 	}
 	// 创建账户
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) // 加密密码
+	encodePW := string(hash)                                                       // 保存在数据库的密码，虽然每次生成都不同，只需保存一份即可
 	user := models.User{}
 	user.Username = username
-	user.Password = password
+	user.Password = encodePW
 	user.Email = email
-
 	err = models.Register(user)
 	if err == nil {
 		this.Data["json"] = map[string]interface{}{
@@ -83,7 +84,7 @@ func (this *UserController) Register() {
 
 // @Title 用户登录
 // @Description 用户登录
-// @Param   email    formData    string  "ant"  true  "邮箱"
+// @Param   email    formData    string  "demo@qq.com"  true  "邮箱"
 // @Param   password    formData    string  "123"    true "密码"
 // @Success 200 登录成功
 // @Success 1000   参数错误
@@ -114,7 +115,8 @@ func (this *UserController) Login() {
 		return
 	}
 	// 验证密码是否正确
-	if user.Password != utils.Crypto(password) {
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
 		this.Data["json"] = map[string]interface{}{
 			"code": consts.ERROR_CODE_USERNAME_OR_PASSWORD_ERROR,
 			"msg":  consts.ERROR_DES_USERNAME_OR_PASSWORD_ERROR,

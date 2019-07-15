@@ -57,7 +57,7 @@ paths:
         description: 邮箱
         required: true
         type: string
-        default: ant
+        default: demo@qq.com
       - in: formData
         name: password
         description: 密码
