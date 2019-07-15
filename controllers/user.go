@@ -4,13 +4,9 @@ import (
 	"ant-go-jwt/common/consts"
 	"ant-go-jwt/common/utils"
 	"ant-go-jwt/models"
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"reflect"
 	"strings"
-	"github.com/dgrijalva/jwt-go"
-
 )
 
 // Operations about Users
@@ -23,23 +19,63 @@ type UserController struct {
 // @Param   username    formData    string  "ant"  true    "用户名"
 // @Param   password    formData    string  "123"    true    "密码"
 // @Param   email    formData    string  "demo@qq.com"    true    "邮箱"
-// @Success 200  请求成功
-// @Failure 403 body is empty
+// @Success 1000   参数错误
+// @Success 1001   请求出错
+// @Success 2000 用户名已存在
+// @Success 2005 邮箱已存在
 // @router / [post]
 func (this *UserController) Register() {
-	username := this.GetString("username")
-	password := this.GetString("password")
-	email := this.GetString("email")
+	username := strings.TrimSpace(this.GetString("username"))
+	password := strings.TrimSpace(this.GetString("password"))
+	email := strings.TrimSpace(this.GetString("email"))
+	// 判断参数是否为空
+	if username == "" || password == "" || email == "" {
+		this.Data["json"] = map[string]interface{}{
+			"code": consts.ERROR_CODE_PARAMETER_ILLEGAL,
+			"msg":  consts.ERROR_DES_PARAMETER_ILLEGAL,
+		}
+		this.ServeJSON()
+		return
+	}
+
+	// 判断用户名是否已经存在
+	_, err := models.GetUserByUsername(username)
+	if err != orm.ErrNoRows {
+		this.Data["json"] = map[string]interface{}{
+			"code": consts.ERROR_CODE_USER_EXIST,
+			"msg":  consts.ERROR_DES_USER_EXIST,
+		}
+		this.ServeJSON()
+		return
+	}
+
+	// 判断邮箱是否已经存在
+	_, err = models.GetUserByEmail(email)
+	if err != orm.ErrNoRows {
+		this.Data["json"] = map[string]interface{}{
+			"code": consts.ERROR_CODE_EMAIL_EXIST,
+			"msg":  consts.ERROR_DES_EMAIL_EXIST,
+		}
+		this.ServeJSON()
+		return
+	}
+	// 创建账户
 	user := models.User{}
 	user.Username = username
 	user.Password = password
 	user.Email = email
 
-	err := models.Register(user)
+	err = models.Register(user)
 	if err == nil {
 		this.Data["json"] = map[string]interface{}{
 			"code": consts.SUCCECC,
 			"msg":  "创建成功",
+		}
+		this.ServeJSON()
+	} else {
+		this.Data["json"] = map[string]interface{}{
+			"code": consts.ERROR_CODE_REQUEST,
+			"msg":  consts.ERROR_DES_REQUEST,
 		}
 		this.ServeJSON()
 	}
@@ -50,17 +86,14 @@ func (this *UserController) Register() {
 // @Param   email    formData    string  "ant"  true  "邮箱"
 // @Param   password    formData    string  "123"    true "密码"
 // @Success 200 登录成功
-// @Success 1101   参数错误
-// @Success 1102   请求出错
-// @Success 1104 用户名不存在
-// @Success 1105 用户名或者密码错误
-// @router / [post]
+// @Success 1000   参数错误
+// @Success 1001   请求出错
+// @Success 2001 用户不存在
+// @Success 2002 用户名或者密码错误
+// @router /login [post]
 func (this *UserController) Login() {
 	email := this.GetString("email")
 	password := this.GetString("password")
-	fmt.Println("===========")
-	fmt.Println(reflect.TypeOf(this))
-
 	// 参数是否为空
 	if strings.TrimSpace(email) == "" || strings.TrimSpace(password) == "" {
 		this.Data["json"] = map[string]interface{}{

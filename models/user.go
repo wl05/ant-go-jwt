@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -26,12 +25,6 @@ func Register(u User) error {
 	o := orm.NewOrm()
 	o.Using("default")
 	_, err := o.Raw("insert into user (username,password,email) values (?,?,?)", u.Username, u.Password, u.Email).Exec()
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("insert ok")
-	}
 	return err
 }
 

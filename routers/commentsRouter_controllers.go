@@ -82,7 +82,7 @@ func init() {
     beego.GlobalControllerRouter["ant-go-jwt/controllers:UserController"] = append(beego.GlobalControllerRouter["ant-go-jwt/controllers:UserController"],
         beego.ControllerComments{
             Method: "Login",
-            Router: `/`,
+            Router: `/login`,
             AllowHTTPMethods: []string{"post"},
             MethodParams: param.Make(),
             Filters: nil,
