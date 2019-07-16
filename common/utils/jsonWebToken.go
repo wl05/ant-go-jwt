@@ -45,6 +45,7 @@ func CheckToken(tknStr string) (b bool, t *jwt.Token) {
 	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
+
 	if !tkn.Valid {
 		return false, nil
 	}

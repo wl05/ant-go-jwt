@@ -3,7 +3,6 @@ package controllers
 import (
 	"ant-go-jwt/common/consts"
 	"ant-go-jwt/common/utils"
-	"fmt"
 )
 
 // Operations about Logout
@@ -16,14 +15,9 @@ type LogoutController struct {
 // @Success 200 登出成功
 // @router /logout [post]
 func (this *LogoutController) Logout() {
-	//accessToken := this.Ctx.GetCookie("accessToken")
 	refreshToken := this.Ctx.GetCookie("refreshToken")
-	isValidRefreshToken, token := utils.CheckToken(refreshToken)
-	fmt.Println("=============")
-	fmt.Println(isValidRefreshToken)
-	fmt.Println(*token)
-	utils.RClient.Set(string(refreshToken), refreshToken, 0)
-	fmt.Println(utils.RClient.Get(string(refreshToken)))
+	utils.RClient.Set(string(refreshToken), "exited", 0) // 这还要设置一下过期时间
+
 	this.Data["json"] = map[string]interface{}{
 		"code": consts.SUCCECC,
 		"msg":  "登出成功",
