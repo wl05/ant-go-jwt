@@ -1,13 +1,14 @@
 package controllers
 
 import (
+	"ant-go-jwt/common/consts"
 	"ant-go-jwt/common/utils"
 	"ant-go-jwt/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
-	"ant-go-jwt/common/consts"
+	"time"
 )
 
 // Operations about Login
@@ -57,12 +58,23 @@ func (this *LoginController) Login() {
 		this.ServeJSON()
 		return
 	}
-	token, err := utils.CreateToken(email)
-	this.Ctx.SetCookie("token", token, 24*60*60, "/") // 设置cookie
+	// accessToken 用于鉴权
+	accessToken, err := utils.CreateToken(email, time.Now().Add(5*time.Minute))
+	// refreshToken 用于获取新的token
+	refreshToken, err := utils.CreateToken(email, time.Now().Add(10*time.Minute))
+
+	this.Ctx.SetCookie("accessToken", accessToken, "/")   // 设置cookie
+	this.Ctx.SetCookie("refreshToken", refreshToken, "/") // 设置cookie
+
+	type Data struct {
+		AccessToken  string `json:"accessToken"`
+		RefreshToken string `json:"refreshToken"`
+	}
+	data := Data{accessToken, refreshToken}
 	this.Data["json"] = map[string]interface{}{
 		"code": consts.SUCCECC,
 		"msg":  "登录成功",
-		"data": token,
+		"data": data,
 	}
 	this.ServeJSON()
 	return

@@ -41,6 +41,15 @@ paths:
           description: 用户不存在
         "2002":
           description: 用户名或者密码错误
+  /logout/logout:
+    post:
+      tags:
+      - logout
+      description: 用户登出
+      operationId: LogoutController.用户登出
+      responses:
+        "200":
+          description: 登出成功
   /signup/:
     post:
       tags:
@@ -92,6 +101,9 @@ tags:
 - name: login
   description: |
     Operations about Login
+- name: logout
+  description: |
+    Operations about Logout
 - name: signup
   description: |
     Operations about Register

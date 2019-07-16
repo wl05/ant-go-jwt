@@ -59,6 +59,20 @@
                 }
             }
         },
+        "/logout/logout": {
+            "post": {
+                "tags": [
+                    "logout"
+                ],
+                "description": "用户登出",
+                "operationId": "LogoutController.用户登出",
+                "responses": {
+                    "200": {
+                        "description": "登出成功"
+                    }
+                }
+            }
+        },
         "/signup/": {
             "post": {
                 "tags": [
@@ -133,6 +147,10 @@
         {
             "name": "login",
             "description": "Operations about Login\n"
+        },
+        {
+            "name": "logout",
+            "description": "Operations about Logout\n"
         },
         {
             "name": "signup",
