@@ -5,15 +5,15 @@ import (
 	"time"
 )
 
-// Create a struct that will be encoded to a JWT.
-// We add jwt.StandardClaims as an embedded type, to provide fields like expiry time
+// 创建一个struct 用来生成token 具体的用法可以参照jwt-go
 type Claims struct {
 	Email string `json:"email"`
 	jwt.StandardClaims
 }
 
 // 创建用户签名的JWT key
-var jwtKey = []byte("my_secret_key") // 关于jwtKey的生成可以使用自己的算法来保证唯一性，这里为了简单就直接用字符串代替了
+// 关于jwtKey的生成可以使用自己的算法来保证唯一性，这里为了简单就直接用字符串代替了
+var jwtKey = []byte("my_secret_key")
 // 创建token
 func CreateToken(email string, expirationTime time.Time) (tokenString string, err error) {
 	claims := Claims{

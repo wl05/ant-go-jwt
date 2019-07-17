@@ -12,4 +12,3 @@ func MysqlClient() {
 	//	fmt.Println(err)
 	//}
 }
-
