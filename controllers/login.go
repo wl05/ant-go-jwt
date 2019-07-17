@@ -25,7 +25,7 @@ type LoginController struct {
 // @Success 1001   请求出错
 // @Success 2001 用户不存在
 // @Success 2002 用户名或者密码错误
-// @router /login [post]
+// @router / [post]
 func (this *LoginController) Login() {
 	email := this.GetString("email")
 	password := this.GetString("password")
@@ -59,7 +59,7 @@ func (this *LoginController) Login() {
 		return
 	}
 	// accessToken 用于鉴权
-	accessToken, err := utils.CreateToken(email, time.Now().Add(5*time.Minute))
+	accessToken, err := utils.CreateToken(email, time.Now().Add(1*time.Minute))
 	// refreshToken 用于获取新的token
 	refreshToken, err := utils.CreateToken(email, time.Now().Add(10*time.Minute))
 
@@ -79,6 +79,3 @@ func (this *LoginController) Login() {
 	this.ServeJSON()
 	return
 }
-
-
-

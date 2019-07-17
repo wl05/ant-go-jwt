@@ -15,7 +15,7 @@
     },
     "basePath": "/v1",
     "paths": {
-        "/login/login": {
+        "/login/": {
             "post": {
                 "tags": [
                     "login"
@@ -59,7 +59,7 @@
                 }
             }
         },
-        "/logout/logout": {
+        "/logout/": {
             "post": {
                 "tags": [
                     "logout"

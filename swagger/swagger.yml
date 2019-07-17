@@ -11,7 +11,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /v1
 paths:
-  /login/login:
+  /login/:
     post:
       tags:
       - login
@@ -41,7 +41,7 @@ paths:
           description: 用户不存在
         "2002":
           description: 用户名或者密码错误
-  /logout/logout:
+  /logout/:
     post:
       tags:
       - logout
